@@ -13,29 +13,88 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pokemon Flutter',
-      theme: ThemeData(
-
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.system,
       home: const TopPage(),
     );
   }
 }
 
+class TopPage extends StatefulWidget {
+  const TopPage({Key? key}) : super(key: key);
 
-
-class TopPage extends StatelessWidget{
-  const TopPage({Key? key}):super(key: key);
-    @override
-    Widget build(BuildContext context){
-      return Scaffold(
-        body: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 16),
-          itemCount: 898,
-          itemBuilder: (context,index)=>PokeListItem(index:index),)
-      );
-    }
+  @override
+  State<TopPage> createState() => _TopPageState();
 }
+
+class _TopPageState extends State<TopPage> {
+  int currentbnb = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: currentbnb == 0 ? const PokeList() : const Settings(),
+      ),
+      bottomNavigationBar:BottomNavigationBar(
+        
+        
+        onTap: (index) => {
+          setState(() => currentbnb = index,)
+        }, 
+
+        currentIndex: currentbnb,
+
+        items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.list), label: 'home'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'setting',
+        ),
+      ]),
+    );
+  }
+}
+
+class PokeList extends StatelessWidget {
+  const PokeList ({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      itemCount: 898,
+      itemBuilder: (context, index) => PokeListItem(index: index),
+    );
+  }
+}
+
+class Main extends StatelessWidget {
+const Main({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context){
+    return Container();
+  }
+}
+
+class Settings extends StatelessWidget {
+const Settings({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context){
+    return ListView(
+      children: const [
+        ListTile(
+          leading: Icon(Icons.lightbulb),
+          title: Text('Dark/Light Mode'),
+        )
+      ],
+    );
+  }
+}
+
 
 
 

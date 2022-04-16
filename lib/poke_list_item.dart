@@ -8,6 +8,8 @@ class PokeListItem extends StatelessWidget {
   @override
   Widget build (BuildContext context){
     return ListTile(
+      // tileColor: Colors.green,
+      
       leading:  Container(
         decoration: BoxDecoration(
           color: Colors.yellow.withOpacity(.5),
