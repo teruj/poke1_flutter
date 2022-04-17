@@ -5,16 +5,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './poke_list_item.dart';
 
 import './models/theme_mode.dart';
+import './models/pokemon.dart';
+
 import './settings.dart';
+import 'const/pokeapi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences pref = await SharedPreferences.getInstance();
   final themeModeNotifier = ThemeModeNotifier(pref);
-  runApp(ChangeNotifierProvider(
-      create: (context) => themeModeNotifier, 
+  final pokemonNotifier = PokemonNotifier();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeModeNotifier>(
+            create: (context) => themeModeNotifier),
+        ChangeNotifierProvider<PokemonNotifier>(
+            create: (context) => pokemonNotifier),
+      ],
       child: const MyApp(),
-  ));
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -25,7 +36,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeMode themeMode = ThemeMode.system;
+  // ThemeMode themeMode = ThemeMode.system;
 
   // @override
   // void initState() {
@@ -80,20 +91,44 @@ class _TopPageState extends State<TopPage> {
   }
 }
 
-class PokeList extends StatelessWidget {
+class PokeList extends StatefulWidget {
   const PokeList({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      itemCount: 898,
-      itemBuilder: (context, index) => PokeListItem(index: index),
-    );
-  }
+  State<PokeList> createState() => _PokeListState();
 }
 
+class _PokeListState extends State<PokeList> {
+  static const int more = 30;
+  int pokeCount = more;
 
-
-
-
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<PokemonNotifier>(builder: (context, pokes, child) {
+      return ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        // itemCount: 898,
+        itemCount: pokeCount + 1,
+        itemBuilder: (context, index) {
+          if (index == pokeCount) {
+            return OutlinedButton(
+              onPressed: (() => {
+                setState(() {
+                  pokeCount = pokeCount + more;
+                  if(pokeCount>pokeMaxId){
+                    pokeCount = pokeMaxId;
+                  }
+                }
+                )
+              }),
+              child: const Text('more'),
+            );
+          }
+          return PokeListItem(
+            poke: pokes.byId(index + 1),
+          );
+        },
+      );
+    });
+  }
+}
