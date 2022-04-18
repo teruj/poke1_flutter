@@ -39,11 +39,14 @@ class PokeDetail extends StatelessWidget {
                     Container(
                       // color: Colors.lightGreen,
                       padding: const EdgeInsets.all(32),
-                      child: Image.network(
-                        poke.imageUrl,
-                        height: 100,
-                        width: 100,
-                        // color: Colors.green,
+                      child: Hero(
+                        tag: poke.name,
+                        child: Image.network(
+                          poke.imageUrl,
+                          height: 100,
+                          width: 100,
+                          // color: Colors.green,
+                        ),
                       ),
                     ),
                     Container(

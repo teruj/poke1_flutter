@@ -14,16 +14,19 @@ class PokeListItem extends StatelessWidget {
       return ListTile(
         // tileColor: Colors.green,
 
-        leading: Container(
-          width: 80,
-          decoration: BoxDecoration(
-            // color: Colors.yellow.withOpacity(.5),
-            color: (pokeTypeColors[poke!.types.first]
-              ?? Colors.grey[100])?.withOpacity(.3),
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              fit: BoxFit.fitWidth,
-              image: NetworkImage(poke!.imageUrl,
+        leading: Hero(
+          tag: poke!.name,
+          child: Container(
+            width: 80,
+            decoration: BoxDecoration(
+              // color: Colors.yellow.withOpacity(.5),
+              color: (pokeTypeColors[poke!.types.first]
+                ?? Colors.grey[100])?.withOpacity(.3),
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                fit: BoxFit.fitWidth,
+                image: NetworkImage(poke!.imageUrl,
+                ),
               ),
             ),
           ),

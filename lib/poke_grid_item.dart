@@ -22,16 +22,19 @@ class PokeGridItem extends StatelessWidget {
                 return PokeDetail(poke: poke!);
               }))
             },
-            child: Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                color: (pokeTypeColors[poke!.types.first] ?? Colors.grey[100])!
-                    .withOpacity(0.3),
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  fit: BoxFit.fitWidth,
-                  image: NetworkImage(poke!.imageUrl),
+            child: Hero(
+              tag: poke!.name,
+              child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: (pokeTypeColors[poke!.types.first] ?? Colors.grey[100])!
+                      .withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    fit: BoxFit.fitWidth,
+                    image: NetworkImage(poke!.imageUrl),
+                  ),
                 ),
               ),
             ),
