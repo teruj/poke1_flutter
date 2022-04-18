@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import './settings.dart';
 import './poke_list_item.dart';
+import 'poke_list.dart';
 
 import './models/theme_mode.dart';
 import './models/pokemon.dart';
 
-import './settings.dart';
-import 'const/pokeapi.dart';
+import './models/favorite.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences pref = await SharedPreferences.getInstance();
   final themeModeNotifier = ThemeModeNotifier(pref);
   final pokemonNotifier = PokemonNotifier();
+  final favoriteNotifier = FavoriteNotifier();
   runApp(
     MultiProvider(
       providers: [
@@ -22,6 +23,8 @@ void main() async {
             create: (context) => themeModeNotifier),
         ChangeNotifierProvider<PokemonNotifier>(
             create: (context) => pokemonNotifier),
+        ChangeNotifierProvider<FavoriteNotifier>(
+            create: (context) => favoriteNotifier),
       ],
       child: const MyApp(),
     ),
@@ -88,47 +91,5 @@ class _TopPageState extends State<TopPage> {
                 icon: Icon(Icons.settings), label: 'setting'),
           ]),
     );
-  }
-}
-
-class PokeList extends StatefulWidget {
-  const PokeList({Key? key}) : super(key: key);
-
-  @override
-  State<PokeList> createState() => _PokeListState();
-}
-
-class _PokeListState extends State<PokeList> {
-  static const int more = 30;
-  int pokeCount = more;
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<PokemonNotifier>(builder: (context, pokes, child) {
-      return ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-        // itemCount: 898,
-        itemCount: pokeCount + 1,
-        itemBuilder: (context, index) {
-          if (index == pokeCount) {
-            return OutlinedButton(
-              onPressed: (() => {
-                setState(() {
-                  pokeCount = pokeCount + more;
-                  if(pokeCount>pokeMaxId){
-                    pokeCount = pokeMaxId;
-                  }
-                }
-                )
-              }),
-              child: const Text('more'),
-            );
-          }
-          return PokeListItem(
-            poke: pokes.byId(index + 1),
-          );
-        },
-      );
-    });
   }
 }
